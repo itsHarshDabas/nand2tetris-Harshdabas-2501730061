@@ -1,0 +1,7 @@
+Line 5: invalid instruction 'D=Q+1' (unknown computation 'Q+1')
+Line 7: invalid instruction 'D;JMX' (unknown jump 'JMX')
+Line 8: invalid instruction 'X=D' (unknown destination 'X')
+Line 9: number too large in '@99999' (max 32767)
+Line 10: invalid A-instruction '@3x'
+Line 11: invalid label '(9BAD)'
+6 error(s) found, tests/Bad.hack was not written.
