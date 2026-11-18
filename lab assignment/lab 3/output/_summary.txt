@@ -1,7 +1,0 @@
-PASS CPU (92 ms)
-PASS CPU-external (61 ms)
-PASS ComputerAdd (18 ms)
-PASS ComputerMax (41 ms)
-PASS ComputerRect (49 ms)
-PASS ComputerLoop (74 ms)
-PASS Memory-map (49 ms)

@@ -1,9 +1,0 @@
-// Not gate built from ONE Nand gate.
-// Tie both inputs together: Nand(a, a) = not(a and a) = not a
-CHIP Not {
-    IN in;
-    OUT out;
-
-    PARTS:
-    Nand(a=in, b=in, out=out);
-}
