@@ -1,0 +1,18 @@
+// RAM8 with all eight register outputs exposed (r0..r7) so that the state of every register
+// can be printed after each write. Same circuit as RAM8.hdl, only more output pins.
+CHIP RAM8View {
+    IN in[16], load, address[3];
+    OUT out[16], r0[16], r1[16], r2[16], r3[16], r4[16], r5[16], r6[16], r7[16];
+
+    PARTS:
+    DMux8Way(in=load, sel=address, a=la, b=lb, c=lc, d=ld, e=le, f=lf, g=lg, h=lh);
+    Register(in=in, load=la, out=oa, out=r0);
+    Register(in=in, load=lb, out=ob, out=r1);
+    Register(in=in, load=lc, out=oc, out=r2);
+    Register(in=in, load=ld, out=od, out=r3);
+    Register(in=in, load=le, out=oe, out=r4);
+    Register(in=in, load=lf, out=of, out=r5);
+    Register(in=in, load=lg, out=og, out=r6);
+    Register(in=in, load=lh, out=oh, out=r7);
+    Mux8Way16(a=oa, b=ob, c=oc, d=od, e=oe, f=of, g=og, h=oh, sel=address, out=out);
+}

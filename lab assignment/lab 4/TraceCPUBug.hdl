@@ -1,0 +1,36 @@
+// Lab 4: the CPU of Lab 3 with extra output pins so that the internal signals can be printed
+// and drawn as waveforms. The logic is identical to CPU.hdl; only the extra OUT pins are new.
+CHIP TraceCPUBug {
+    IN  inM[16], instruction[16], reset;
+    OUT outM[16], writeM, addressM[15], pc[15],
+        aReg[16], dReg[16],          // contents of the A and D registers
+        alu[16], zrOut, ngOut,       // ALU result and its flags
+        jumpOut, loadAOut, loadDOut; // control signals
+
+    PARTS:
+    Not(in=instruction[15], out=isA);
+    And(a=instruction[15], b=true, out=isC);
+    Mux16(a=instruction, b=aluOut, sel=isC, out=aIn);
+    And(a=isC, b=instruction[5], out=cLoadA);
+    Or(a=isA, b=cLoadA, out=loadA, out=loadAOut);
+    ARegister(in=aIn, load=loadA, out=aOut, out=aReg, out[0..14]=addressM);
+    And(a=isC, b=instruction[4], out=loadD, out=loadDOut);
+    DRegister(in=aluOut, load=loadD, out=dOut, out=dReg);
+    Mux16(a=aOut, b=inM, sel=instruction[12], out=aOrM);
+    ALU(x=dOut, y=aOrM,
+        zx=instruction[11], nx=instruction[10],
+        zy=instruction[9],  ny=instruction[8],
+        f=instruction[7],   no=instruction[6],
+        out=aluOut, out=outM, out=alu, zr=zr, ng=ng, zr=zrOut, ng=ngOut);
+    And(a=isC, b=instruction[3], out=writeM);
+    Not(in=zr, out=nzr);
+    Not(in=ng, out=nng);
+    Or(a=nzr, b=false, out=pos);   // BUG: forgets to check ng
+    And(a=instruction[2], b=ng,  out=jlt);
+    And(a=instruction[1], b=zr,  out=jeq);
+    And(a=instruction[0], b=pos, out=jgt);
+    Or(a=jlt, b=jeq, out=j1);
+    Or(a=j1, b=jgt, out=j2);
+    And(a=isC, b=j2, out=jump, out=jumpOut);
+    PC(in=aOut, load=jump, inc=true, reset=reset, out[0..14]=pc);
+}

@@ -1,0 +1,16 @@
+// Lab 4: Computer = ROM32K + TraceCPU + Memory, with the CPU's internal signals brought out.
+// (An output pin of a chip cannot be read inside the chip, so pc, writeM, addressM, outM and memOut
+//  are carried on internal wires p, w, ad, om, mo and copied to the output pins as well.)
+CHIP TraceComputerBug {
+    IN reset;
+    OUT instr[16], pc[15], aReg[16], dReg[16], alu[16], zrOut, ngOut, jumpOut,
+        loadAOut, loadDOut, writeM, addressM[15], outM[16], memOut[16];
+
+    PARTS:
+    ROM32K(address=p, out=instruction, out=instr);
+    TraceCPUBug(inM=mo, instruction=instruction, reset=reset,
+             outM=om, outM=outM, writeM=w, writeM=writeM, addressM=ad, addressM=addressM, pc=p, pc=pc,
+             aReg=aReg, dReg=dReg, alu=alu, zrOut=zrOut, ngOut=ngOut,
+             jumpOut=jumpOut, loadAOut=loadAOut, loadDOut=loadDOut);
+    Memory(in=om, load=w, address=ad, out=mo, out=memOut);
+}
